@@ -1,5 +1,7 @@
-﻿using Autenticacao.DTO;
+﻿using Autenticacao.Data;
+using Autenticacao.DTO;
 using Autenticacao.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +12,22 @@ namespace Autenticacao.Controllers
     [Route("[controller]")]
     public class PerfilController : ControllerBase
     {
-        private static IList<Perfil> perfis = new List<Perfil>();
-        private static int id = 1;
+        private PerfilContext _context;
+        private IMapper _mapper;
+
+        public PerfilController(PerfilContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
         [HttpPost]
-        public IActionResult AdicionaPerfil([FromBody] PerfilDTO novoPerfil)
+        public IActionResult AdicionaPerfil([FromBody] CriaPerfilDTO novoPerfil)
         {
-            var perfil = new Perfil()
-            {
-                Id = id++,
-                Nome = novoPerfil.Perfil
-            };
+            var perfil = _mapper.Map<Perfil>(novoPerfil);
 
-            perfis.Add(perfil);
+            _context.Perfis.Add(perfil);
+            _context.SaveChanges();
 
             return CreatedAtAction(nameof(BuscaPerfilPorId), new { Id = perfil.Id }, perfil);
         }
@@ -30,16 +35,16 @@ namespace Autenticacao.Controllers
         [HttpGet("{id}")]
         public IActionResult BuscaPerfilPorId(int id)
         {
-            var perfil = perfis.FirstOrDefault(p => p.Id == id);
+            var perfil = _context.Perfis.FirstOrDefault(p => p.Id == id);
             if (perfil != null)
                 return Ok(perfil);
             return NotFound();
         }
 
         [HttpGet]
-        public IActionResult BuscaPerfis()
+        public IEnumerable<Perfil> BuscaPerfis()
         {
-            return Ok(perfis);
+            return _context.Perfis;
         }
     }
 }
