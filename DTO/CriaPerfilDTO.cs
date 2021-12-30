@@ -1,6 +1,6 @@
 ﻿namespace Autenticacao.DTO
 {
-    public class PerfilDTO
+    public class CriaPerfilDTO
     {
         public string Perfil { get; set; }
     }
