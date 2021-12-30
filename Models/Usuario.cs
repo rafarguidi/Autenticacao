@@ -8,7 +8,8 @@ namespace Autenticacao.Models
     {
         [Key]
         [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+        [DataType(DataType.EmailAddress, ErrorMessage = "E-mail informado não é válido")]
         [Required]
         public string Email { get; set; }
         public string Nome { get; set; }

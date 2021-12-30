@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace Autenticacao
 {
@@ -22,12 +23,15 @@ namespace Autenticacao
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<UsuarioContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("AutenticacaoConnection")));
-            
+            services.AddDbContext<PerfilContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("AutenticacaoConnection")));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Autenticacao", Version = "v1" });
             });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
