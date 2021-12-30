@@ -16,7 +16,7 @@ namespace Autenticacao.Controllers
         private static int id = 1;
 
         [HttpPost]
-        public IActionResult AdicionarUsuario([FromBody] UsuarioDTO usuario)
+        public IActionResult AdicionaUsuario([FromBody] UsuarioDTO usuario)
         {
             var user = new Usuario()
             {
@@ -25,8 +25,11 @@ namespace Autenticacao.Controllers
                 Email = usuario.Email,
                 Senha = usuario.Senha,
                 DataCriacao = DateTime.Now,
-                DataAtualizacao = DateTime.Now
+                DataAtualizacao = DateTime.Now,
+                DataUltimoLogin = DateTime.Now
             };
+
+            usuarios.Add(user);
             
             return CreatedAtAction(nameof(BuscaUsuarioPorId), new { Id = user.Id }, user);
         }
@@ -41,9 +44,18 @@ namespace Autenticacao.Controllers
         }
 
         [HttpGet]
-        public IActionResult BuscaUsuario()
+        public IActionResult BuscaUsuarios()
         {
             return Ok(usuarios);
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login(LoginDTO login)
+        {
+            var usuario = usuarios.FirstOrDefault(u => u.Email == login.Email && u.Senha == login.Senha);
+            if (usuario == null)
+                return NotFound();
+            return CreatedAtAction(nameof(BuscaUsuarioPorId), new { Id = usuario.Id }, usuario);
         }
 
     }
