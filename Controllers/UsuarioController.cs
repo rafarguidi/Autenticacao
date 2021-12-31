@@ -1,4 +1,5 @@
 ﻿using Autenticacao.Data;
+using Autenticacao.Data.EfCore;
 using Autenticacao.DTO;
 using Autenticacao.Models;
 using AutoMapper;
@@ -13,29 +14,25 @@ namespace Autenticacao.Controllers
     [Route("[controller]")]
     public class UsuarioController : ControllerBase
     {
-        private UsuarioContext _context;
+        private IUsuarioDAO _dao;
         private IMapper _mapper;
 
-        public UsuarioController(UsuarioContext context, IMapper mapper)
+        public UsuarioController(IMapper mapper, IUsuarioDAO dao)
         {
-            _context = context;
             _mapper = mapper;
+            _dao = dao;
         }
 
         [HttpPost]
         public IActionResult AdicionaUsuario([FromBody] CriaUsuarioDTO usuarioDto)
         {
             var user = _mapper.Map<Usuario>(usuarioDto);
-            /*var user = new Usuario()
-            {
-                Id = Guid.NewGuid(),
-                DataCriacao = DateTime.Now,
-                DataAtualizacao = DateTime.Now,
-                DataUltimoLogin = DateTime.Now
-            };*/
-
-            _context.Usuarios.Add(user);
-            _context.SaveChanges();
+            user.DataCriacao = DateTime.Now;
+            user.DataAtualizacao = DateTime.Now;
+            user.DataUltimoLogin = DateTime.Now;
+            
+            _dao.Adicionar(user);
+            
             var exibeUsuarioDto = _mapper.Map<ExibeUsuarioDTO>(user);
             return CreatedAtAction(nameof(BuscaUsuarioPorId), new { Id = user.Id }, exibeUsuarioDto);
         }
@@ -43,7 +40,8 @@ namespace Autenticacao.Controllers
         [HttpGet("{id}")]
         public IActionResult BuscaUsuarioPorId(Guid id)
         {
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = _dao.BuscarPorId(id);
+            
             if (usuario != null)
             {
                 var usuarioDto = _mapper.Map<ExibeUsuarioDTO>(usuario);
@@ -55,7 +53,7 @@ namespace Autenticacao.Controllers
         [HttpGet]
         public IEnumerable<ExibeUsuarioDTO> BuscaUsuarios()
         {
-            var usuarios = _context.Usuarios;
+            var usuarios = _dao.Usuarios();
             var usuariosDto = _mapper.Map<IEnumerable<ExibeUsuarioDTO>>(usuarios);
             return usuariosDto;
         }
@@ -63,10 +61,11 @@ namespace Autenticacao.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginDTO login)
         {
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == login.Email && u.Senha == login.Senha);
-            if (usuario == null)
+            var usuario = _dao.BuscarPorEmail(login.Email);
+            if (usuario == null || usuario?.Senha != login.Senha)
                 return NotFound();
-            return CreatedAtAction(nameof(BuscaUsuarioPorId), new { Id = usuario.Id }, usuario);
+            var usuarioDto = _mapper.Map<ExibeUsuarioDTO>(usuario);
+            return CreatedAtAction(nameof(BuscaUsuarioPorId), new { Id = usuario.Id }, usuarioDto);
         }
 
     }

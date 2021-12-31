@@ -13,7 +13,7 @@ namespace Autenticacao.DTO
         [Required]
         public string Email { get; set; }
         public string Nome { get; set; }
-        public IList<CriaPerfilDTO> Perfis { get; set; }
+        public IList<ExibePerfilDTO> Perfis { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime DataAtualizacao { get; set; }
         public DateTime DataUltimoLogin { get; set; }

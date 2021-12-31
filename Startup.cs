@@ -1,4 +1,5 @@
 using Autenticacao.Data;
+using Autenticacao.Data.EfCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +23,9 @@ namespace Autenticacao
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UsuarioContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("AutenticacaoConnection")));
-            services.AddDbContext<PerfilContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("AutenticacaoConnection")));
+
+            services.AddTransient<IUsuarioDAO, UsuarioDAOEntity>();
+            services.AddTransient<IPerfilDAO, PerfilDAOEntity>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

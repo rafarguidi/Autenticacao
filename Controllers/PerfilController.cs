@@ -1,4 +1,5 @@
 ﻿using Autenticacao.Data;
+using Autenticacao.Data.EfCore;
 using Autenticacao.DTO;
 using Autenticacao.Models;
 using AutoMapper;
@@ -12,13 +13,13 @@ namespace Autenticacao.Controllers
     [Route("[controller]")]
     public class PerfilController : ControllerBase
     {
-        private PerfilContext _context;
+        private IPerfilDAO _dao;
         private IMapper _mapper;
 
-        public PerfilController(PerfilContext context, IMapper mapper)
+        public PerfilController(IMapper mapper, IPerfilDAO dao)
         {
-            _context = context;
             _mapper = mapper;
+            _dao = dao;
         }
 
         [HttpPost]
@@ -26,8 +27,7 @@ namespace Autenticacao.Controllers
         {
             var perfil = _mapper.Map<Perfil>(novoPerfil);
 
-            _context.Perfis.Add(perfil);
-            _context.SaveChanges();
+            _dao.Adicionar(perfil);
 
             return CreatedAtAction(nameof(BuscaPerfilPorId), new { Id = perfil.Id }, perfil);
         }
@@ -35,16 +35,19 @@ namespace Autenticacao.Controllers
         [HttpGet("{id}")]
         public IActionResult BuscaPerfilPorId(int id)
         {
-            var perfil = _context.Perfis.FirstOrDefault(p => p.Id == id);
+            var perfil = _dao.BuscarPorId(id);
             if (perfil != null)
-                return Ok(perfil);
+            {
+                var exibeDto = _mapper.Map<ExibePerfilDTO>(perfil);
+                return Ok(exibeDto);
+            }
             return NotFound();
         }
 
         [HttpGet]
         public IEnumerable<Perfil> BuscaPerfis()
         {
-            return _context.Perfis;
+            return _dao.Perfis();
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class CriaPerfilDTO
     {
-        public string Perfil { get; set; }
+        public string Nome { get; set; }
     }
 }
