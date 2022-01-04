@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Autenticacao.DTO.Perfil;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Autenticacao.DTO
+namespace Autenticacao.DTO.Usuario
 {
     public class ExibeUsuarioDTO
     {

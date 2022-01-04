@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Autenticacao.DTO
+namespace Autenticacao.DTO.Usuario
 {
     public class ExibeUsuarioListaDTO
     {

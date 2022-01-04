@@ -1,7 +1,6 @@
-﻿using Autenticacao.DTO;
+﻿using Autenticacao.DTO.Perfil;
 using Autenticacao.Models;
 using AutoMapper;
-using System.Collections.Generic;
 
 namespace Autenticacao.Profiles
 {
@@ -11,6 +10,8 @@ namespace Autenticacao.Profiles
         {
             CreateMap<CriaPerfilDTO, Perfil>();
             CreateMap<Perfil, ExibePerfilDTO>();
+            CreateMap<Perfil, ExibePerfilListaDTO>();
+            CreateMap<Perfil, PerfilAdicionadoDTO>();
         }
     }
 }

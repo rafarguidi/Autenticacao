@@ -1,4 +1,4 @@
-﻿using Autenticacao.DTO;
+﻿using Autenticacao.DTO.Usuario;
 using Autenticacao.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -1,11 +1,9 @@
 ﻿using Autenticacao.Data;
-using Autenticacao.Data.EfCore;
-using Autenticacao.DTO;
+using Autenticacao.DTO.Perfil;
 using Autenticacao.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Autenticacao.Controllers
 {
@@ -28,8 +26,9 @@ namespace Autenticacao.Controllers
             var perfil = _mapper.Map<Perfil>(novoPerfil);
 
             _dao.Adicionar(perfil);
+            var perfilDto = _mapper.Map<PerfilAdicionadoDTO>(perfil);
 
-            return CreatedAtAction(nameof(BuscaPerfilPorId), new { Id = perfil.Id }, perfil);
+            return CreatedAtAction(nameof(BuscaPerfilPorId), new { Id = perfil.Id }, perfilDto);
         }
 
         [HttpGet("{id}")]
@@ -45,9 +44,11 @@ namespace Autenticacao.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Perfil> BuscaPerfis()
+        public IEnumerable<ExibePerfilListaDTO> BuscaPerfis()
         {
-            return _dao.Perfis();
+            var listaPerfis = _dao.Perfis();
+            var listaDto = _mapper.Map<IEnumerable<ExibePerfilListaDTO>>(listaPerfis);
+            return listaDto;
         }
     }
 }

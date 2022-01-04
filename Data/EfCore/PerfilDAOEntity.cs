@@ -27,7 +27,7 @@ namespace Autenticacao.Data.EfCore
 
         public IEnumerable<Perfil> Perfis()
         {
-            return _context.Perfis;
+            return _context.Perfis.ToList();
         }
 
         public void Dispose()

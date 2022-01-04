@@ -1,8 +1,7 @@
-﻿using Autenticacao.DTO;
+﻿using Autenticacao.DTO.Perfil;
+using Autenticacao.DTO.Usuario;
 using Autenticacao.Models;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
 
 namespace Autenticacao.Profiles
 {

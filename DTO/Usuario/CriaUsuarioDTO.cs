@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Autenticacao.DTO.Perfil;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Autenticacao.DTO
+namespace Autenticacao.DTO.Usuario
 {
     public class CriaUsuarioDTO
     {

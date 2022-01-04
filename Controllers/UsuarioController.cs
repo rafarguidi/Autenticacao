@@ -1,6 +1,5 @@
 ﻿using Autenticacao.Data;
-using Autenticacao.Data.EfCore;
-using Autenticacao.DTO;
+using Autenticacao.DTO.Usuario;
 using Autenticacao.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
