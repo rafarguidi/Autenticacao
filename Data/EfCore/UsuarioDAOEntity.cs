@@ -1,4 +1,6 @@
-﻿using Autenticacao.Models;
+﻿using Autenticacao.DTO;
+using Autenticacao.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,17 +23,32 @@ namespace Autenticacao.Data.EfCore
 
         public Usuario BuscarPorId(Guid id)
         {
-            return context.Usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = context.Usuarios
+                .Include(u => u.Perfis)
+                .ThenInclude(up => up.Perfil)
+                .FirstOrDefault(u => u.Id == id);
+
+            return usuario;
         }
 
         public IEnumerable<Usuario> Usuarios()
         {
-            return context.Usuarios.ToList();
+            return context.Usuarios
+                .ToList();
         }
 
-        public Usuario BuscarPorEmail(string email)
+        public Usuario Logar(LoginDTO login)
         {
-            return context.Usuarios.FirstOrDefault(u => u.Email == email);
+            var usuario = context.Usuarios
+                .Include(u => u.Perfis)
+                .ThenInclude(up => up.Perfil)
+                .FirstOrDefault(u => u.Email == login.Email);
+            
+            if (usuario == null || usuario?.Senha != login.Senha)
+                return null;
+            usuario.DataUltimoLogin = DateTime.Now;
+            context.SaveChanges();
+            return usuario;
         }
 
         public void Dispose()

@@ -51,18 +51,18 @@ namespace Autenticacao.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ExibeUsuarioDTO> BuscaUsuarios()
+        public IEnumerable<ExibeUsuarioListaDTO> BuscaUsuarios()
         {
             var usuarios = _dao.Usuarios();
-            var usuariosDto = _mapper.Map<IEnumerable<ExibeUsuarioDTO>>(usuarios);
+            var usuariosDto = _mapper.Map<IEnumerable<ExibeUsuarioListaDTO>>(usuarios);
             return usuariosDto;
         }
 
         [HttpPost("login")]
         public IActionResult Login(LoginDTO login)
         {
-            var usuario = _dao.BuscarPorEmail(login.Email);
-            if (usuario == null || usuario?.Senha != login.Senha)
+            Usuario usuario = _dao.Logar(login);
+            if (usuario == null)
                 return NotFound();
             var usuarioDto = _mapper.Map<ExibeUsuarioDTO>(usuario);
             return CreatedAtAction(nameof(BuscaUsuarioPorId), new { Id = usuario.Id }, usuarioDto);

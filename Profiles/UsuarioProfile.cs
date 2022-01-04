@@ -12,6 +12,7 @@ namespace Autenticacao.Profiles
         {
             CreateMap<CriaUsuarioDTO, Usuario>();
             CreateMap<Usuario, ExibeUsuarioDTO>();
+            CreateMap<Usuario, ExibeUsuarioListaDTO>();
 
             CreateMap<CriaPerfilDTO, UsuarioPerfil>()
                 .AfterMap(
@@ -20,7 +21,7 @@ namespace Autenticacao.Profiles
 
             CreateMap<UsuarioPerfil, ExibePerfilDTO>()
                 .AfterMap(
-                    (up, dto) => { dto.Nome = up.Perfil.Nome; }
+                    (up, dto) => { dto.Nome = up.Perfil?.Nome; }
                 );
 
         }
